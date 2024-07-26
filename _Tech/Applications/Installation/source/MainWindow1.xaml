@@ -1,0 +1,20 @@
+﻿<Window x:Name="form1Installation" x:Class="InstallationWPFMainWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InstallationWPFMainWindow"
+        mc:Ignorable="d"
+        Title="Installation Windows" Height="730" Width="1041" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="C:/_Tech/Applications/Source/Images/Icone.ico">
+    <Grid x:Name="form">
+        <Label x:Name="lblTitre" Content="Configuration du Windows" HorizontalAlignment="Center" VerticalAlignment="Top" Width="925" Height="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Microsoft Sans Serif" FontSize="16" Background="#FF0C9491"/>
+        <Label x:Name="lblProgress" Content="Initialisation" HorizontalAlignment="Center" VerticalAlignment="Top" Width="925" Height="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Consolas" FontSize="12" Background="#FF94120C" Margin="0,50,0,0" Foreground="#FFFBF0F0"/>
+        <RichTextBox x:Name="richTxtBxOutput" Width="925" Height="545" HorizontalScrollBarVisibility="Auto" IsEnabled="False" VerticalScrollBarVisibility="Auto">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+</Window>

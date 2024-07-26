@@ -1,0 +1,173 @@
+{
+  "Adobe Reader": {
+    "path64": "$env:SystemDrive\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe",
+    "path32": "$env:SystemDrive\\Program Files (x86)\\Adobe\\Acrobat Reader DC\\Reader\\AcroRd32.exe",
+    "pathAppData": "$env:SystemDrive\\Users\\$env:username\\AppData\\Local\\Adobe\\Acrobat\\DC",
+    "WingetName": "Adobe.Acrobat.Reader.64-bit",
+    "ChocoName": "adobereader",
+    "NiniteName": "Reader_fr_install.exe",
+    "NiniteGithubLink": "https://raw.githubusercontent.com/jeremyrenaud42/Installation/main/Ninite/Reader_fr_install.exe"
+  },
+    "Battinfo": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Dontsleep": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Aida": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Core Temp": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Prime95": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "HeavyLoad": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "HDSentinnel": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "HDTune": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "As_SSD": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Diskmark": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Furmark": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Unigine": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Sysinfo": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Whocrashed": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "HWMonitor": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Speccy": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Burnintest": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    },
+    "Trottlestop": {
+      "path64": null,
+      "path32": null,
+      "pathAppData": null,
+      "WingetName": null,
+      "ChocoName": null,
+      "NiniteName": null,
+      "NiniteGithubLink": null
+    }
+}
