@@ -7,6 +7,67 @@ function Get-RequiredModules
     }
 }
 
+
+#Theme:
+# 0 : STO
+# 1 : Classic 
+# 2 : Halloween
+# 3 : Christmas
+# 4 : Ocean
+
+$theme = 1
+#STO:
+if($theme -eq 0){
+    $backgroundColor = "Black"
+    $colordefault = "DarkRed"
+    $coloraccent = "White"
+    $colorfolder = "yellow"
+    $colorquit = "red"
+}
+#Classic:
+elseif($theme -eq 1){
+    $backgroundColor = "Black"
+    $colordefault = "Cyan"
+    $coloraccent = "magenta"
+    $colorfolder = "green"
+    $colorquit = "Darkred"
+}
+#Halloween:
+elseif($theme -eq 2){
+    $backgroundColor = "Black"
+    $colordefault = "yellow"
+    $coloraccent = "red"
+    $colorfolder = "DarkGreen"
+    $colorquit = "Darkred"
+}
+#Christmas:
+elseif($theme -eq 3){
+    $backgroundColor = "Black"
+    $colordefault = "Darkred"
+    $coloraccent = "White"
+    $colorfolder = "Darkgreen"
+    $colorquit = "Cyan"
+}
+#Ocean:
+elseif($theme -eq 4){
+    $backgroundColor = "DarkMagenta"
+    $colordefault = "Gray"
+    $coloraccent = "Cyan"
+    $colorfolder = "Blue"
+    $colorquit = "DarkCyan"
+}
+else{
+    $backgroundColor = "Black"
+    $colordefault = "white"
+    $coloraccent = "white"
+    $colorfolder = "white"
+    $colorquit = "Darkred"
+}
+#change color
+$Host.UI.RawUI.BackgroundColor = $backgroundColor
+$Host.UI.RawUI.ForegroundColor = $colordefault
+
+
 Get-RequiredModules
 $desktop = [Environment]::GetFolderPath("Desktop")
 $pathFix = "$env:SystemDrive\_Tech\Applications\fix"
@@ -67,16 +128,20 @@ function Tweaking
 Function menu
 {
 Clear-Host
-write-host "[1] Fichiers corrompus [SFC/DISM/CHKDSK]" -ForegroundColor 'Cyan'
-write-host "[2] Windows Tweak et Fix [Tweaking]" -ForegroundColor 'Green'
-write-host "[3] Obtenir MDP et licenses [Sterjo]" -ForegroundColor 'darkcyan'
-write-host "[4] Desinstaller les pilotes graphiques [DDU]" -ForegroundColor 'DarkGreen'
-write-host "[5] Supprimer un dossier [WiseForceDeleter]" -ForegroundColor 'magenta'
-write-host "[6] Verifier taille des dossiers [WinDirStat]" -ForegroundColor 'red'
-write-host "[7] Gerer les partitions [Partition Wizard]" -ForegroundColor 'green'
-write-host "[8] Reparer Internet [Internet repair]" -ForegroundColor 'DarkRed'
-write-host ""
-write-host "[0] Quitter" -ForegroundColor 'red'
+write-host "=========================================================================================="
+write-host "  + [#] +           Programme                 +              Description               +  "-ForegroundColor $coloraccent
+write-host "  + --- + ----------------------------------- + -------------------------------------- +  " 
+write-host "  + [1] + SFC/DISM/CHKDSK        [sous-menu]  + Fichiers corrompus                     +  " -ForegroundColor $colorfolder
+write-host "  + [2] + Windows tweak          [sous-menu]  + Windows Tweak et Fix                   +  " -ForegroundColor $colorfolder
+write-host "  + [3] + Sterjo MDP recovery    [sous-menu]  + Obtenir MDP et licences                +  " -ForegroundColor $colorfolder
+write-host "  + [4] + DDU                                 + Desinstaller les pilotes graphiques    +  " 
+write-host "  + [5] + WiseForceDeleter                    + Supprimer un dossier/fichier           +  " -ForegroundColor $coloraccent
+write-host "  + [6] + WinDirStat                          + Verifier taille des dossiers           +  " 
+write-host "  + [7] + Partition Wizard                    + Gerer les partitions                   +  " -ForegroundColor $coloraccent
+write-host "  + [8] + Internet repair                     + Reparer Internet                       +  " 
+write-host "  + --- + ----------------------------------- + -------------------------------------- +  " -ForegroundColor $coloraccent
+write-host "  + [0] + Quitter                             + Fermer ou revenir au menu              +  " -ForegroundColor $colorquit
+write-host "=========================================================================================="
 $choix = read-host "Choisissez une option" 
 
 switch ($choix)
@@ -121,12 +186,16 @@ $sortie = read-host "Voulez-vous retourner au menu Principal? o/n [n = Suppressi
 function submenuHDD
 {
 Clear-Host
-write-host "[1] Sfc /scannow"
-write-host "[2] DISM"
-write-host "[3] CHKDSK"
-write-host "[4] Creer session admin"
-write-host ""
-Write-host "[0] Retour au menu precedent" -ForegroundColor 'red'
+write-host "================================================="
+write-host "  + [#] +           SFC/DISM/CHKDSK           +  "-ForegroundColor $coloraccent
+write-host "  + --- + ----------------------------------- +  " 
+write-host "  + [1] + Sfc /scannow                        +  " -ForegroundColor $coloraccent
+write-host "  + [2] + DISM                                +  " 
+write-host "  + [3] + CHKDSK                              +  " -ForegroundColor $coloraccent
+write-host "  + [4] + Creer session admin                 +  " 
+write-host "  + --- + ----------------------------------- +  " -ForegroundColor $coloraccent
+write-host "  + [0] + Retour au menu precedent            +  " -ForegroundColor $colorquit
+write-host "================================================="
 $choix = read-host "Choisissez une option"
 
 switch ($choix)
@@ -143,15 +212,20 @@ submenuHDD
 
 function submenuMDP
 {
+
 Clear-Host
-write-host "[1] Browser"
-write-host "[2] Chrome"
-write-host "[3] Firefox"
-write-host "[4] Keys"
-write-host "[5] Mail"
-write-host "[6] Wireless"
-write-host ""
-Write-host "[0] Retour au menu precedent" -ForegroundColor 'red'
+write-host "================================================="
+write-host "  + [#] +           Sterjo MDP recovery       +  "-ForegroundColor $coloraccent
+write-host "  + --- + ----------------------------------- +  " 
+write-host "  + [1] + Browser                             +  " -ForegroundColor $coloraccent
+write-host "  + [2] + Chrome                              +  " 
+write-host "  + [3] + Firefox                             +  " -ForegroundColor $coloraccent
+write-host "  + [4] + Keys                                +  " 
+write-host "  + [5] + Mail                                +  " -ForegroundColor $coloraccent
+write-host "  + [6] + Wireless                            +  " 
+write-host "  + --- + ----------------------------------- +  " -ForegroundColor $coloraccent
+write-host "  + [0] + Retour au menu precedent            +  " -ForegroundColor $colorquit
+write-host "================================================="
 $choix = read-host "Choisissez une option"
 
 switch ($choix)
@@ -171,13 +245,17 @@ submenuMDP
 function submenuTweak
 {
 Clear-Host
-write-host "[1] Fix w10"
-write-host "[2] Fix w11"
-write-host "[3] Ultimate Windows Tweaker W10"
-write-host "[4] Ultimate Windows Tweaker W11"
-write-host "[5] Tweaking Windows Repair"
-write-host ""
-Write-host "[0] Retour au menu precedent" -ForegroundColor 'red'
+write-host "================================================="
+write-host "  + [#] +           Windows Tweak et Fix      +  "-ForegroundColor $coloraccent
+write-host "  + --- + ----------------------------------- +  " 
+write-host "  + [1] + Fix w10                             +  " -ForegroundColor $coloraccent
+write-host "  + [2] + Fix w11                             +  " 
+write-host "  + [3] + Ultimate Windows Tweaker W10        +  " -ForegroundColor $coloraccent
+write-host "  + [4] + Ultimate Windows Tweaker W11        +  " 
+write-host "  + [5] + Tweaking Windows Repair             +  " -ForegroundColor $coloraccent
+write-host "  + --- + ----------------------------------- +  " 
+write-host "  + [0] + Retour au menu precedent            +  " -ForegroundColor $colorquit
+write-host "================================================="
 $choix = read-host "Choisissez une option"
 
 switch ($choix)
