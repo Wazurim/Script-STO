@@ -1,8 +1,7 @@
-#Les assembly sont nécéssaire pour le fonctionnement du script. Ne pas effacer
 Add-Type -AssemblyName PresentationFramework,System.Windows.Forms,System.speech,System.Drawing,presentationCore
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-function ImportModules
+function Get-RequiredModules
 {
     $modulesFolder = "$env:SystemDrive\_Tech\Applications\Source\modules"
     foreach ($module in Get-Childitem $modulesFolder -Name -Filter "*.psm1")
@@ -11,24 +10,28 @@ function ImportModules
     }
 }
 
+$desktop = [Environment]::GetFolderPath("Desktop")
 $pathDesinfection = "$env:SystemDrive\_Tech\Applications\Desinfection"
 $pathDesinfectionSource = "$env:SystemDrive\_Tech\Applications\Desinfection\source"
 set-location $pathDesinfection
-ImportModules
-CreateFolder "_Tech\Applications\Desinfection\source"
-DownloadFile "fondvirus.png" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/fondvirus.png' "$pathDesinfectionSource"  
+Get-RequiredModules
+$applicationPath = "$env:SystemDrive\_Tech\Applications"
+$sourceFolderPath = "$applicationPath\source"
+$logFileName = Initialize-LogFile $pathDesinfectionSource
+$desinfectionLockFile = "$sourceFolderPath\Desinfection.lock"
+Get-RemoteFile "fondvirus.png" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/fondvirus.png' "$pathDesinfectionSource"  
+$adminStatus = Get-AdminStatus
+if($adminStatus -eq $false)
+{
+    Restart-Elevated -Path $pathDesinfection\Desinfection.ps1
+}
+$Global:desinfectionIdentifier = "Desinfection.ps1"
+Test-ScriptInstance $desinfectionLockFile $Global:desinfectionIdentifier
 
 function zipccleaner
 {
-    UnzipApp "ccleaner" 'https://raw.githubusercontent.com/jeremyrenaud42/Optimisation_Nettoyage/main/Ccleaner.zip' $pathDesinfectionSource
-    $ccleanerpostpath = test-Path "$env:SystemDrive\Users\$env:UserName\Downloads\CCleaner\CCleaner64.exe"
-    if(!($ccleanerpostpath))
-    {
-        New-Item "$env:SystemDrive\Users\$env:UserName\Downloads\CCleaner" -ItemType 'Directory'
-        Copy-Item "$env:SystemDrive\_Tech\Applications\Optimisation_Nettoyage\Source\Ccleaner\*" -Destination "$env:SystemDrive\Users\$env:UserName\Downloads\CCleaner" -Force | Out-Null #copy sur le dossier user pour pas bloquer la clé
-    }
-    Start-Process "$env:SystemDrive\Users\$env:UserName\Downloads\CCleaner\CCleaner64.exe"
-    Addlog "Optimisation_Nettoyagelog.txt" "Nettoyage CCleaner effectué"
+Invoke-App "CCleaner64.zip" 'https://raw.githubusercontent.com/jeremyrenaud42/Optimisation_Nettoyage/main/CCleaner64.zip' $pathDesinfectionSource
+Add-Log "Optimisation_Nettoyagelog.txt" "Nettoyage CCleaner effectué"
 }
 
 $image = [system.drawing.image]::FromFile("$env:SystemDrive\_Tech\Applications\Desinfection\Source\fondvirus.png") 
@@ -55,8 +58,8 @@ $Process_Explorer.FlatAppearance.BorderColor = 'darkred'
 $Process_Explorer.FlatAppearance.MouseDownBackColor = 'Darkmagenta'
 $Process_Explorer.FlatAppearance.MouseOverBackColor = 'gray'
 $Process_Explorer.Add_Click({
-    DownloadLaunchApp "procexp64.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/procexp64.exe' "$pathDesinfectionSource"
-    Addlog "desinfectionlog.txt" "Vérifier les process"
+    Invoke-App "procexp64.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/procexp64.exe' "$pathDesinfectionSource"
+    Add-Log $logFileName "Vérifier les process"
 })
 
 #RKill
@@ -74,8 +77,8 @@ $RKill.FlatAppearance.BorderColor = 'darkred'
 $RKill.FlatAppearance.MouseDownBackColor = 'Darkmagenta'
 $RKill.FlatAppearance.MouseOverBackColor = 'gray'
 $RKill.Add_Click({
-    DownloadLaunchApp "rkill64.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/rkill64.exe' "$pathDesinfectionSource"
-    Addlog "desinfectionlog.txt" "Désactiver les process"
+    Invoke-App "rkill64.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/rkill64.exe' "$pathDesinfectionSource"
+    Add-Log $logFileName "Désactiver les process"
 })
 
 #Autoruns
@@ -92,10 +95,10 @@ $Autoruns.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $Autoruns.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $Autoruns.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $Autoruns.Add_Click({
-    DownloadLaunchApp "autoruns.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Optimisation_Nettoyage/main/autoruns.exe' "$pathDesinfectionSource"
+    Invoke-App "autoruns.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Optimisation_Nettoyage/main/autoruns.exe' "$pathDesinfectionSource"
     start-sleep 5
     taskmgr
-    Addlog "DesinfectionLog.txt" "Vérifier les logiciels au démarrage"
+    Add-Log $logFileName "Vérifier les logiciels au démarrage"
 })
 
 #Nettoyage
@@ -114,7 +117,7 @@ $HDD.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $HDD.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $HDD.Add_Click({
 Start-Process "$env:SystemDrive\Windows\SYSTEM32\cleanmgr.exe"
-Addlog "desinfectionlog.txt" "Nettoyage du disque effectué"
+Add-Log $logFileName "Nettoyage du disque effectué"
 })
 
 #Ccleaner
@@ -150,8 +153,8 @@ $Restauration.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $Restauration.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $Restauration.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $Restauration.Add_Click({
-CreateRestorePoint #| Out-Null
-Addlog "desinfectionlog.txt" "Point de restauration effectué"
+New-RestorePoint
+Add-Log $logFileName "Point de restauration effectué"
 })
 
 Function Revo
@@ -159,7 +162,7 @@ Function Revo
 $PathRevo= "$root\\_Tech\\Applications\\Optimisation_Nettoyage\\Source\\RevoUninstaller_Portable\\RevoUPort.exe"
 Get-ItemProperty "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*","HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object DisplayName  | Sort-Object -Property DisplayName | Format-Table �AutoSize > "$root\\_Tech\\Applications\\Optimisation_Nettoyage\\Source\\RevoBefore.txt"
 Start-Process -wait "$PathRevo"
-AddLog "desinfectionlog.txt" "Vérifier les programmes nuisibles"
+Add-Log $logFileName "Vérifier les programmes nuisibles"
 Get-ItemProperty "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*","HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object DisplayName  | Sort-Object -Property DisplayName | Format-Table �AutoSize > "$root\\_Tech\\Applications\\Optimisation_Nettoyage\\Source\\RevoAfter.txt"
 Compare-Object -ReferenceObject (Get-Content -path "$root\\_Tech\\Applications\\Optimisation_Nettoyage\\Source\\RevoBefore.txt") -DifferenceObject (Get-Content -path "$root\\_Tech\\Applications\\Optimisation_Nettoyage\\Source\\RevoAfter.txt") | Out-File "$env:SystemDrive\_Tech\Applications\Desinfection\Source\Logs\Log.txt" -Append
 }
@@ -179,8 +182,8 @@ $Revo.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $Revo.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $Revo.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $Revo.Add_Click({
-    UnzipAppLaunch "RevoUninstaller_Portable" 'https://raw.githubusercontent.com/jeremyrenaud42/Optimisation_Nettoyage/main/RevoUninstaller_Portable.zip' "RevoUPort.exe" "$pathDesinfectionSource"
-    Addlog "desinfectionlog.txt" "Vérifier les programmes nuisibles"
+    Invoke-App "RevoUPort.zip" 'https://raw.githubusercontent.com/jeremyrenaud42/Optimisation_Nettoyage/main/RevoUPort.zip' "$pathDesinfectionSource"
+    Add-Log $logFileName "Vérifier les programmes nuisibles"
 })
 
 #ADWcleaner
@@ -198,8 +201,8 @@ $ADWcleaner.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $ADWcleaner.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $ADWcleaner.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $ADWcleaner.Add_Click({
-    DownloadLaunchApp "adwcleaner.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/adwcleaner.exe' "$pathDesinfectionSource"
-    Addlog "desinfectionlog.txt" "Analyse ADW effectué"
+    Invoke-App "adwcleaner.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/adwcleaner.exe' "$pathDesinfectionSource"
+    Add-Log $logFileName "Analyse ADW effectué"
 })
 
 #MalwareByte
@@ -220,7 +223,7 @@ $MalwareByte.Add_Click({
 $path = Test-Path "$env:SystemDrive\Program Files\Malwarebytes\Anti-Malware\mbam.exe" 
 if($path -eq $false)
 {
-    Chocoinstall
+    Install-Choco
     choco install malwarebytes -y | Out-Null
     if($path -eq $false)
     {
@@ -229,7 +232,7 @@ if($path -eq $false)
         $path = Test-Path "$env:SystemDrive\Program Files\Malwarebytes\Anti-Malware\mbam.exe"
         if($path -eq $false)
         {
-            Wingetinstall
+            Install-Winget
             winget install -e --id  Malwarebytes.Malwarebytes --accept-package-agreements --accept-source-agreements --silent
             Start-Process "$env:SystemDrive\Program Files\Malwarebytes\Anti-Malware\mbam.exe"
         }  
@@ -243,7 +246,7 @@ else
 {
     Start-Process "$env:SystemDrive\Program Files\Malwarebytes\Anti-Malware\mbam.exe"
 }
-Addlog "desinfectionlog.txt" "Analyse Malwarebyte effectué"
+Add-Log $logFileName "Analyse Malwarebyte effectué"
 })
 
 #SuperAntiSpyware
@@ -264,7 +267,7 @@ $SuperAntiSpyware.Add_Click({
 $path = Test-Path "$env:SystemDrive\Program Files\SUPERAntiSpyware\SUPERAntiSpyware.exe"
 if($path -eq $false)
 {
-    Chocoinstall
+    Install-Choco
     choco install superantispyware -y | out-null
     Start-Process "$env:SystemDrive\Program Files\SUPERAntiSpyware\SUPERAntiSpyware.exe" 
     if($path -eq $false)
@@ -274,7 +277,7 @@ if($path -eq $false)
         $path = Test-Path "$env:SystemDrive\Program Files\SUPERAntiSpyware\SUPERAntiSpyware.exe"
         if($path -eq $false)
         {
-            Wingetinstall
+            Install-Winget
             winget install -e --id  SUPERAntiSpyware.SUPERAntiSpyware --accept-package-agreements --accept-source-agreements --silent
         } 
     }
@@ -287,7 +290,7 @@ else
 {
     Start-Process "$env:SystemDrive\Program Files\SUPERAntiSpyware\SUPERAntiSpyware.exe"
 }
-Addlog "desinfectionlog.txt" "Analyse SuperAntiSpyware effectué"
+Add-Log $logFileName "Analyse SuperAntiSpyware effectué"
 })
 
 #HitmanPro
@@ -305,8 +308,8 @@ $HitmanPro.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $HitmanPro.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $HitmanPro.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $HitmanPro.Add_Click({
-    DownloadLaunchApp "HitmanPro.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/HitmanPro.exe' "$pathDesinfectionSource"
-    Addlog "desinfectionlog.txt" "Vérifier les virus avec HitmanPro"
+    Invoke-App "HitmanPro.exe" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/HitmanPro.exe' "$pathDesinfectionSource"
+    Add-Log $logFileName "Vérifier les virus avec HitmanPro"
 })
 
 #RogueKiller
@@ -324,8 +327,8 @@ $RogueKiller.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $RogueKiller.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $RogueKiller.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $RogueKiller.Add_Click({
-    UnzipAppLaunch "Roguekiller" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/Roguekiller.zip' "RogueKiller_portable64.exe" "$pathDesinfectionSource"
-    Addlog "desinfectionlog.txt" "Analyse RogueKiller effectué"
+    Invoke-App "RogueKiller_portable64.zip" 'https://raw.githubusercontent.com/jeremyrenaud42/Desinfection/main/RogueKiller_portable64.zip' "$pathDesinfectionSource"
+    Add-Log $logFileName "Analyse RogueKiller effectué"
 })
 #via le cmd, aller a l'emplacement RogueKillerCMD.exe -scan -no-interact -deleteall #-debuglog {path}
 
@@ -344,7 +347,7 @@ $quit.FlatAppearance.BorderColor = [System.Drawing.Color]::darkred
 $quit.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::Darkmagenta
 $quit.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::gray
 $quit.Add_Click({
-Task
+Invoke-Task -TaskName 'delete _tech' -ExecutedScript 'C:\Temp\Remove.bat'
 $Form.Close()
 })
 
@@ -378,6 +381,10 @@ $label.ForeColor='white'
 $label.BackColor = 'darkred'
 $label.Text = "Choisissez une option"
 $label.TextAlign = 'MiddleCenter'
+
+$Form.add_Closed({
+    Remove-Item -Path $desinfectionLockFile -Force -ErrorAction SilentlyContinue
+})
 
 #afficher la form
 $Form.controls.AddRange(@($Menuprincipal,$Ccleaner,$HDD,$Rkill,$Autoruns,$Process_Explorer,$Restauration,$Revo,$ADWcleaner,$MalwareByte,$SuperAntiSpyware,$HitmanPro,$RogueKiller,$Quit,$label))

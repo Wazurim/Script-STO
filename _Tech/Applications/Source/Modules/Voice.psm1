@@ -49,8 +49,7 @@ public class Audio
 }
 '@
 
-#Music de debut
-function MusicDebut($song)
+function Start-Music($song)
 {
     $mediaPlayer = New-Object system.windows.media.mediaplayer
     $mediaPlayer.open($song)
@@ -58,7 +57,7 @@ function MusicDebut($song)
 }
 
 #Recuperer les voix depuis le registre pour avoir Microsoft Caroline
-function Getvoice
+function Get-voice
 {
         $sourcePath = 'HKLM:\software\Microsoft\Speech_OneCore\Voices\Tokens' #Where the OneCore voices live
         $destinationPath = 'HKLM:\SOFTWARE\Microsoft\Speech\Voices\Tokens' #For 64-bit apps
@@ -74,7 +73,7 @@ function Getvoice
             }
 }
 
-function Speak($message)
+function Send-VoiceMessage($message)
 {
 $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer
 $speak.SelectVoice('Microsoft Claude')
